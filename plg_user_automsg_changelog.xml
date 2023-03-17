@@ -1,0 +1,14 @@
+<changelogs>
+	<changelog>
+		<element>automsg</element>
+		<type>plugin</type>
+		<group>user</group>
+		<version>2.0.0</version>
+        <note>
+            <item>Update : 17/03/2023</item>
+        </note>
+        <addition>
+            <item>Joomla 4.x compatibility</item>
+        </addition>
+	</changelog>
+</changelogs>
