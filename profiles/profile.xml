@@ -7,7 +7,7 @@
 		>
 			<field
 				name="automsg"
-				type="radio" class="btn-group btn-group-yesno" default="oui"
+				type="radio" class="btn-group btn-group-yesno" default="Oui"
 				label="Réception des emails"
 				description="Réception des emails de création des articles"
 				>
