@@ -10,7 +10,6 @@
 				type="radio" class="btn-group btn-group-yesno" default="oui"
 				label="Réception des emails"
 				description="Réception des emails de création des articles"
-				default="Oui"
 				>
 				<option value="Oui">JYES</option>
 				<option value="Non">JNO</option>
