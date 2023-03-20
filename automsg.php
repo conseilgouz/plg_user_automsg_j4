@@ -1,5 +1,5 @@
 <?php
- /**
+/**
 * AutoMsg Profile  - Joomla Module 
 * Version			: 2.0
 * Package			: Joomla 4.x.x
@@ -25,12 +25,12 @@ protected $db;
 	function onContentPrepareData($context, $data)
 	{
 		// Check we are manipulating a valid form.
-		if (!in_array($context, array('com_users.profile','com_users.registration','com_users.user','com_admin.profile'))){
+		if (!in_array($context, array('com_users.profile','com_users.registration','com_users.user','com_admin.profile','com_automsg.automsg'))){
 			return true;
 		}
  
 		$userId = isset($data->id) ? $data->id : 0;
- 
+        if (!$userId) return false;
 		// Load the profile data from the database.
         $db    = $this->db;
         $query = $db->getQuery(true)
@@ -42,7 +42,7 @@ protected $db;
                     )
                 ->from($db->quoteName('#__user_profiles'))
                 ->where($db->quoteName('user_id') . ' = :userid')
-                ->where($db->quoteName('profile_key') . ' LIKE '.$db->quote('profile_automsg.%'))
+                ->where($db->quoteName('profile_key') . ' LIKE '.$db->quote('profile_automsg.automsg'))
                 ->order($db->quoteName('ordering'))
                 ->bind(':userid', $userId, ParameterType::INTEGER);
 
@@ -76,7 +76,7 @@ protected $db;
 			return false;
 		}
 		// Check we are manipulating a valid form.
-		if (!in_array($form->getName(), array('com_users.profile', 'com_users.registration','com_users.user','com_admin.profile'))) {
+		if (!in_array($form->getName(), array('com_users.profile', 'com_users.registration','com_users.user','com_admin.profile','com_automsg.automsg'))) {
 			return true;
 		}
 		if ($form->getName()=='com_users.profile')
@@ -94,7 +94,7 @@ protected $db;
 		}
  
 		//In this example, we treat the frontend registration and the back end user create or edit as the same. 
-		elseif ($form->getName()=='com_users.registration' || $form->getName()=='com_users.user' )
+		elseif ($form->getName()=='com_users.registration' || $form->getName()=='com_users.user' || $form->getName()=='com_automsg.automsg' )
 		{		
 			// Add the registration fields to the form.
 			Form::addFormPath(dirname(__FILE__).'/profiles');
@@ -115,17 +115,12 @@ protected $db;
  
 		if ($userId && $result && isset($data['profile_automsg']) && (count($data['profile_automsg']))) {
 			$db = $this->db;
-			try	{
-				$db->setQuery(
+			$db->setQuery(
 					$db->getQuery(true)
 							->delete($db->quoteName('#__user_profiles'))
-							->where($db->quoteName('user_id').' = :userId AND profile_key LIKE \'profile_automsg.%\'')
+							->where($db->quoteName('user_id').' = :userId AND profile_key LIKE \'profile_automsg.automsg\'')
 							->bind(':userId', $userId, ParameterType::INTEGER)
 							)->execute();
-			} catch (ExecutionFailureException $e) {
-				// Do nothing.
-			}
-
 			$order	= 1;
             $query = $db->getQuery(true)
                 ->insert($db->quoteName('#__user_profiles'));
@@ -152,11 +147,57 @@ protected $db;
 			}
             $db->setQuery($query);
             $db->execute();
+			$this->checkautomsgtoken($userId);
 		}
  
 		return true;
 	}
- 
+	/* check if automsg token exists.
+	*  if it does not, create it
+	*/
+    protected function checkautomsgtoken($userId) {
+        $db    = $this->db;
+        $query = $db->getQuery(true)
+                 ->select(
+                        [
+                            $db->quoteName('profile_value'),
+                        ]
+                    )
+                ->from($db->quoteName('#__user_profiles'))
+                ->where($db->quoteName('user_id') . ' = :userid')
+                ->where($db->quoteName('profile_key') . ' LIKE '.$db->quote('profile_automsg.token'))
+                ->bind(':userid', $userId, ParameterType::INTEGER);
+
+        $db->setQuery($query);
+        $result = $db->loadResult();
+		if ($result) return true; // automsg token already exists => exit
+		// create a token
+        $query = $db->getQuery(true)
+                ->insert($db->quoteName('#__user_profiles'));
+		$token = mb_strtoupper(strval(bin2hex(openssl_random_pseudo_bytes(16))));
+		$order = 2;
+		$query->values(
+                implode(
+                        ',',
+                        $query->bindArray(
+                            [
+                                $userId,
+                                'profile_automsg.token',
+                                $token,
+                                $order++,
+                            ],
+                            [
+                                ParameterType::INTEGER,
+                                ParameterType::STRING,
+                                ParameterType::STRING,
+                                ParameterType::INTEGER,
+                            ]
+                        )
+                    )
+        );
+        $db->setQuery($query);
+        $db->execute();
+	}
 	/**
 	 * Remove all user profile information for the given user ID
 	 *
@@ -175,16 +216,12 @@ protected $db;
 		$userId	= $user['id'];
  
 		if ($userId) {
-			try	{
-				$this->db->setQuery(
-					$this->db->getQuery(true)
+			$this->db->setQuery(
+    				$this->db->getQuery(true)
 							->delete($this->db->quoteName('#__user_profiles'))
 							->where($this->db->quoteName('user_id').' = :userId AND profile_key LIKE \'profile_automsg.%\'')
 							->bind(':userId', $userId, ParameterType::INTEGER)
 							)->execute();
-			} catch (ExecutionFailureException $e) {
-				// Do nothing.
-			}
 		}
  
 		return true;

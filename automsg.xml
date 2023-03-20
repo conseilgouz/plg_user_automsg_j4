@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="4.0" type="plugin" group="user" method="upgrade">
-	<name>Profil: activation du paramètrage de l'envoi des emails automatiques</name>
+	<name>PLG_USER_AUTOMSG_NAME</name>
 	<author>ConseilGouz</author>
-	<creationDate>2023/03/17</creationDate>
+	<creationDate>2023/03/20</creationDate>
 	<copyright>(C)2023 ConseilGouz. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>pascal.leconte@conseilgouz.com</authorEmail>
 	<authorUrl>www.conseilgouz.com</authorUrl>
-	<version>2.0.0</version>
-	<description>Gestion des messages automatiques au niveau du profil</description>
+	<version>2.0.1</version>
+	<description>PLG_USER_AUTOMSG_XML_DESCRIPTION</description>
 	<scriptfile>script.php</scriptfile>
 	<files>
 		<filename plugin="automsg">automsg.php</filename>
 		<filename>index.html</filename>
 		<folder>profiles</folder>
 	</files>
+	<languages>
+		<language tag="fr-FR">language/fr-FR/plg_user_automsg.ini</language>
+		<language tag="fr-FR">language/fr-FR/plg_user_automsg.sys.ini</language>
+	</languages>
+	
 	<changelogurl>https://raw.githubusercontent.com/conseilgouz/plg_user_automsg_j4/master/plg_user_automsg_changelog.xml</changelogurl>
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
-				<field name="register-require_automsg" type="list"
-					label="Activer AutoMsg sur le profil"
-					description="Autoriser les utilisateurs à gérer la réception ou non des mails automatiques de création d'articles"
-					default="1"
-				>
-					<option value="1">JYES</option>
-					<option value="0">JNO</option>
-				</field>
+				<field name="register-require_automsg" type="hidden"
+					value="1"/>
  			</fieldset>
  		</fields>
 	</config>

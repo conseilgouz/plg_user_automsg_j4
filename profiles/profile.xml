@@ -3,17 +3,16 @@
 <form>
 	<fields name="profile_automsg">
 		<fieldset name="profile_automsg"
-			label="Réception des emails à la création d'un nouvel article"
+			label="Email sur un nouvel article"
 		>
 			<field
 				name="automsg"
-				type="list"
-				default="1"
-				label="Réception des messages automatiques"
-				description="Réception des messages de création/mise à jour des articles"
+				type="radio" class="btn-group btn-group-yesno" default="oui"
+				label="Réception des emails"
+				description="Réception des emails de création des articles"
 				>
-				<option value="Oui">Oui</option>
-				<option value="Non">Non</option>
+				<option value="Oui">JYES</option>
+				<option value="Non">JNO</option>
 			</field>
 		</fieldset>
 	</fields>
