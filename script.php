@@ -1,7 +1,7 @@
 <?php
 /**
-* Profile AutoMsg Plugin  - Joomla 4.x 
-* Version			: 2.0.0
+* Profile AutoMsg Plugin  - Joomla 4.x/5.x 
+* Version			: 2.1.1
 * copyright 		: Copyright (C) 2023 ConseilGouz. All rights reserved.
 * license    		: http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 */
@@ -20,6 +20,7 @@ class plguserautomsgInstallerScript
 	private $extname                 = 'automsg';
 	private $previous_version        = '';
 	private $dir           = null;
+	private $lang;
 	private $installerName = 'plguserautomsginstaller';
 	public function __construct()
 	{
