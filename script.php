@@ -63,6 +63,15 @@ class plguserautomsgInstallerScript
 		return true;
     }
 	private function postinstall_cleanup() {
+		$obsleteFiles = [
+			JPATH_SITE . '/plugins/user/'.$this->extname.'/automsg.php'
+		];
+		foreach ($obsleteFiles as $file) {
+			if (@is_file($file)) {
+				File::delete($file);
+			}
+		}
+		
 		$db = Factory::getDbo();
         $conditions = array(
             $db->qn('type') . ' = ' . $db->q('plugin'),
@@ -77,7 +86,7 @@ class plguserautomsgInstallerScript
 	        $db->execute();
         }
         catch (RuntimeException $e) {
-            JLog::add('unable to enable '.$this->name, JLog::ERROR, 'jerror');
+            Log::add('unable to enable '.$this->name, Log::ERROR, 'jerror');
         }
 
 	}
@@ -117,7 +126,7 @@ class plguserautomsgInstallerScript
 	}
 	private function uninstallInstaller()
 	{
-		if ( ! JFolder::exists(JPATH_PLUGINS . '/system/' . $this->installerName)) {
+		if ( ! is_dir(JPATH_PLUGINS . '/system/' . $this->installerName)) {
 			return;
 		}
 		$this->delete([

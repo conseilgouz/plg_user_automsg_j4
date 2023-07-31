@@ -1,20 +1,27 @@
 <?php
 /**
 * AutoMsg Profile  - Joomla Module 
-* Version			: 2.0
-* Package			: Joomla 4.x.x
+* Version			: 2.1.0
+* Package			: Joomla 4.x/5.x
 * copyright 		: Copyright (C) 2023 ConseilGouz. All rights reserved.
 * license    		: http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 */
+namespace ConseilGouz\Plugin\User\AutoMsg\Extension;
 defined('JPATH_BASE') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\Database\ParameterType;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\Database\DatabaseAwareTrait;
+use Joomla\CMS\User\UserFactoryAwareTrait;
 
-class plgUserautomsg extends CMSPlugin {
+class AutoMsg extends CMSPlugin {
+    use DatabaseAwareTrait;
+    use UserFactoryAwareTrait;
+
 protected $db;	
+
 	/**
 	 * @param	string	The context for the data
 	 * @param	int		The user id
@@ -50,7 +57,7 @@ protected $db;
         $results = $db->loadRowList();
  
 		// Merge the profile data.
-		$data->profile_automsg = array();
+		$data->profile_automsg =array();
 		foreach ($results as $v) {
 			$k = str_replace('profile_automsg.', '', $v[0]);
 			$data->profile_automsg[$k] = json_decode($v[1], true);
@@ -82,7 +89,8 @@ protected $db;
 		if ($form->getName()=='com_users.profile')
 		{
 			// Add the profile fields to the form.
-			Form::addFormPath(dirname(__FILE__).'/profiles');
+		    $test = dirname(__FILE__);
+			Form::addFormPath($test.'/../profiles');
 			$form->loadFile('profile', false);
  
 			// Toggle whether the something field is required.
@@ -97,8 +105,9 @@ protected $db;
 		elseif ($form->getName()=='com_users.registration' || $form->getName()=='com_users.user' || $form->getName()=='com_automsg.automsg' )
 		{		
 			// Add the registration fields to the form.
-			Form::addFormPath(dirname(__FILE__).'/profiles');
-			$form->loadFile('profile', false);
+		    $test = dirname(__FILE__);
+		    Form::addFormPath($test.'/../profiles');
+		    $form->loadFile('profile', false);
  
 			// Toggle whether the something field is required.
 			if ($this->params->get('register-require_something', 1) > 0) {
