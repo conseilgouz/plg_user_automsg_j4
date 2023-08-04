@@ -1,7 +1,7 @@
 <?php
 /**
 * AutoMsg Profile  - Joomla Module 
-* Version			: 2.1.0
+* Version			: 2.1.2
 * Package			: Joomla 4.x/5.x
 * copyright 		: Copyright (C) 2023 ConseilGouz. All rights reserved.
 * license    		: http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
@@ -14,11 +14,9 @@ use Joomla\CMS\Form\FormHelper;
 use Joomla\Database\ParameterType;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\Database\DatabaseAwareTrait;
-use Joomla\CMS\User\UserFactoryAwareTrait;
 
 class AutoMsg extends CMSPlugin {
     use DatabaseAwareTrait;
-    use UserFactoryAwareTrait;
 
 protected $db;	
 
